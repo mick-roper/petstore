@@ -1,15 +1,15 @@
 .PHONY: all
-all: clean-cli test-cli build-cli
+all: clean test build
 
-.PHONY: clean-cli
-clean-cli:
+.PHONY: clean
+clean:
 	rm -rf bin
 
-.PHONY: test-cli
-test-cli:
+.PHONY: test
+test:
 	go test ./...
 
-.PHONY: build-cli
-build-cli:
+.PHONY: build
+build:
 	mkdir bin
-	GOOS=darwin GOARCH=amd64 go build -o bin/darwin/cli main.go
+	GOOS=darwin GOARCH=amd64 go build -o bin/darwin/petstore main.go
