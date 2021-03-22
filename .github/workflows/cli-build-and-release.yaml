@@ -65,8 +65,8 @@ jobs:
         GOOS: ${{ matrix.goos }}
         GOARCH: ${{ matrix.goarch }}
       run: |
-        go build -ldflags="-X 'github.com/mick-roper/petstore/cli/cmd/version.Version=${{ needs.create_release.outputs.tag }}'" -o petstore-${{ matrix.goos }}-${{ matrix.goarch }} main.go
-        zip petstore-${{ matrix.goos }}-${{ matrix.goarch }}.zip petstore-${{ matrix.goos }}-${{ matrix.goarch }}
+        go build -ldflags="-X 'github.com/mick-roper/petstore/cli/cmd/version.Version=${{ needs.create_release.outputs.tag }}'" -o petstore main.go
+        zip petstore-${{ matrix.goos }}-${{ matrix.goarch }}.zip petstore
     - name: upload asset
       uses: actions/upload-release-asset@v1
       env:
