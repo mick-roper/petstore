@@ -1,0 +1,27 @@
+name: api - continuous integration
+
+on:
+  push:
+    paths:
+    - '.github/workflows/api-pets*'
+    - 'api/pets/**'
+
+defaults:
+  run:
+    shell: bash
+    working-directory: api/pets
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-go@v2
+      with:
+        stable: true
+    - name: get deps
+      run: go mod vendor
+    - name: build
+      run: go build -v ./...
+    - name: test
+      run: go test -v ./...
