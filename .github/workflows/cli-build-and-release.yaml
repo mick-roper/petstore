@@ -1,4 +1,4 @@
-name: cli - continuous integration
+name: cli - build, test and release
 
 on:
   push:
@@ -14,23 +14,21 @@ defaults:
     working-directory: cli
 
 jobs:
-  build-and-test:
+  build_and_test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-go@v2
       with:
         stable: true
-    - name: get deps
-      run: go mod vendor
     - name: build
       run: go build -v ./...
     - name: test
       run: go test -v ./...
-  create-release:
+  create_release:
     runs-on: ubuntu-latest
     needs:
-    - build-and-test
+    - build_and_test
     steps:
     - name: version bump
       id: version_bump
@@ -44,5 +42,38 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ steps.version_bump.outputs.new_tag }}
-        release_name: Release ${{ steps.version_bump.outputs.new_tag }}
+        release_name: CLI Release ${{ steps.version_bump.outputs.new_tag }}
         body: ${{ steps.tag_version.outputs.changelog }}
+    outputs:
+      tag: ${{ steps.version_bump.outputs.new_tag }}
+      release_upload_url: ${{ steps.create_release.outputs.upload_url }}
+  create-cli-binaries:
+    runs-on: ubuntu-latest
+    needs:
+    - create_release
+    strategy:
+      matrix:
+        goarch: [amd64]
+        goos: [linux, darwin, windows]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-go@v2
+      with:
+        stable: true
+    - name: create binary package
+      env:
+        GOOS: ${{ matrix.goos }}
+        GOARCH: ${{ matrix.goarch }}
+      run: |
+        mkdir bin && cd bin
+        go build -ldflags="-X 'github.com/mick-roper/petstore/cli/main.Version=${{ need.create_release.outputs.tag }}'" -o petstore-${{ matrix.goos }}-${{ matrix.goarch }} main.go
+        zip $petstore-${{ matrix.goos }}-${{ matrix.goarch }}.zip $petstore-${{ matrix.goos }}-${{ matrix.goarch }}
+    - name: upload asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ need.create_release.outputs.release_upload_url }}
+        asset_path: cli/bin/petstore-${{ matrix.goos }}-${{ matrix.goarch }}.zip
+        asset_name: petstore-${{ matrix.goos }}-${{ matrix.goarch }}.zip
+        asset_content_type: application/zip
