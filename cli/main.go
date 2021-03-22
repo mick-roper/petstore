@@ -8,14 +8,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var rootCmd = &cobra.Command{}
+
 func init() {
+	rootCmd.AddCommand(version.NewCommand())
+	rootCmd.AddCommand(pets.NewCommand())
+
 	cobra.OnInitialize()
 }
 
 func main() {
-	rootCmd := cobra.Command{}
-	rootCmd.AddCommand(version.NewCommand())
-	rootCmd.AddCommand(pets.NewCommand())
 	err := rootCmd.Execute()
 	if err != nil {
 		log.Fatal(err)
