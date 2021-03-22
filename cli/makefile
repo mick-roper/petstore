@@ -13,3 +13,4 @@ test:
 build:
 	mkdir bin
 	GOOS=darwin GOARCH=amd64 go build -o bin/darwin/petstore main.go
+	GOOS=linux GOARCH=amd64 go build -o bin/linux/petstore main.go

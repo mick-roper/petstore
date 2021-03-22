@@ -1,0 +1,24 @@
+name: cli - continuous integration
+
+on:
+  push:
+    branches-ignore:
+    - main
+    tags-ignore:
+    - '*'
+
+defaults:
+  run:
+    shell: bash
+    working-directory: cli
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-go@v2
+      with:
+        stable: true
+    - name: test
+      run: make test
