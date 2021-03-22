@@ -3,7 +3,7 @@ name: api - continuous integration
 on:
   push:
     paths:
-    - '.github/workflows/api-*'
+    - '.github/workflows/api*'
     - 'api/**'
 
 defaults:

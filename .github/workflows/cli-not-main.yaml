@@ -5,7 +5,7 @@ on:
     branches-ignore:
     - main
     paths:
-    - '.github/workflows/cli-*'
+    - '.github/workflows/cli*'
     - 'cli/**'
 
 defaults:
