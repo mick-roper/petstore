@@ -19,6 +19,8 @@ jobs:
     - uses: actions/setup-go@v2
       with:
         stable: true
+    - name: get deps
+      run: go mod vendor
     - name: build
       run: go build -v ./...
     - name: test
