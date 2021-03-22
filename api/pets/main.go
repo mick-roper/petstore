@@ -8,6 +8,10 @@ import (
 	"github.com/gorilla/mux"
 )
 
+var (
+	Version string
+)
+
 func main() {
 	r := mux.NewRouter()
 
