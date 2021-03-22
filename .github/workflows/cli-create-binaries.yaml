@@ -1,7 +1,7 @@
 name: create binaries
 on:
   release:
-    type: [created]
+    types: [created]
 jobs:
   create-binaries:
     runs-on: ubuntu-latest
