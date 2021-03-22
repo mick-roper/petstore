@@ -3,13 +3,13 @@ name: api - continuous integration
 on:
   push:
     paths:
-    - '.github/workflows/api*'
-    - 'api/**'
+    - '.github/workflows/api-pets*'
+    - 'api/pets/**'
 
 defaults:
   run:
     shell: bash
-    working-directory: api
+    working-directory: api/pets
 
 jobs:
   build-and-test:
