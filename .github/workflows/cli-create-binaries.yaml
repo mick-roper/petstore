@@ -2,7 +2,7 @@ name: create binaries
 on:
   release
 jobs:
-  create-binaries:
+  create-cli-binaries:
     runs-on: ubuntu-latest
     strategy:
       matrix:
