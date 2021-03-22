@@ -28,7 +28,13 @@ jobs:
     - name: test
       run: go test -v ./...
   create-release:
+    strategy:
+      matrix:
+        goarch: [amd64]
+        goos: [linux, darwin, windows]
     runs-on: ubuntu-latest
+    needs:
+    - build-and-test
     steps:
     - name: version bump
       id: version_bump
@@ -36,13 +42,14 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
     - name: create package
-      env:
-        GOOS: darwin
-        GOARCH: amd64
       run: |
         mkdir bin
-        go build -ldflags="-X 'github.com/mick-roper/petstore/cli/main.Version=${{ steps.version_bump.outputs.new_tag }}'" -o bin/$GOOS/$GOARCH/petstore main.go
-        zip bin/petstore-cli.zip bin/$GOOS/$GOARCH/petstore
+        cd bin
+        GOOS=${{ matrix.goos }}
+        GOARCH=${{ matrix.goarch }}
+        BIN_NAME=petstore-${{ matrix.goos }}-${{ matrix.goarch }}
+        go build -ldflags="-X 'github.com/mick-roper/petstore/cli/main.Version=${{ steps.version_bump.outputs.new_tag }}'" -o $BIN_NAME main.go
+        zip $BIN_NAME.zip $BIN_NAME
     - name: create release
       id: create_release
       uses: actions/create-release@v1
@@ -58,6 +65,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: bin/petstore-cli.zip
-        asset_name: petstore-cli.zip
+        asset_path: cli/bin/petstore-${{ matrix.goos }}-${{ matrix.goarch }}.zip
+        asset_name: petstore-${{ matrix.goos }}-${{ matrix.goarch }}.zip
         asset_content_type: application/zip
