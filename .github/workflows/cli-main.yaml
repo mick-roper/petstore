@@ -40,7 +40,7 @@ jobs:
         mkdir bin
         go build -ldflags="-X 'github.com/mick-roper/petstore/cli/main.Version=${{ steps.version_bump.outputs.new_tag }}'" -o bin/$GOOS/$GOARCH/petstore main.go
     - name: create release
-      uses: actions/@create-release@v1
+      uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
