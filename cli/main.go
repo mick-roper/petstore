@@ -3,13 +3,21 @@ package main
 import (
 	"log"
 
-	root "github.com/mick-roper/petstore/cli/cmd"
+	"github.com/mick-roper/petstore/cli/cmd/pets"
+	"github.com/mick-roper/petstore/cli/cmd/version"
+	"github.com/spf13/cobra"
 )
 
-var (
-	Version string
-)
+func init() {
+	cobra.OnInitialize()
+}
 
 func main() {
-	log.Fatal(root.NewRootCommand().Execute())
+	rootCmd := cobra.Command{}
+	rootCmd.AddCommand(version.NewCommand())
+	rootCmd.AddCommand(pets.NewCommand())
+	err := rootCmd.Execute()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
