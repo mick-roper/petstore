@@ -20,5 +20,7 @@ jobs:
     - uses: actions/setup-go@v2
       with:
         stable: true
+    - name: build
+      run: go build -v ./...
     - name: test
-      run: make test
+      run: go test -v ./...
