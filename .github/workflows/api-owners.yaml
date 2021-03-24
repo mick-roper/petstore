@@ -1,15 +1,15 @@
-name: api/pets - build and test
+name: api/owners - build and test
 
 on:
   push:
     paths:
-    - '.github/workflows/api-pets*'
-    - 'api/pets/**'
+    - '.github/workflows/api-owners*'
+    - 'api/owners/**'
 
 defaults:
   run:
     shell: bash
-    working-directory: api/pets
+    working-directory: api/owners
 
 jobs:
   build-and-test:
